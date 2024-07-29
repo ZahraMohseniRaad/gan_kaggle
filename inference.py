@@ -3,40 +3,26 @@ import torch
 from torchvision import transforms
 from PIL import Image
 import matplotlib.pyplot as plt
-from generator import Generator  # Import the Generator class from generator.py
 from generator import getGenerator
-from dataset import trainloader
-from discriminator import getDiscriminator
-import torch.nn as nn
-import config
-from tqdm import tqdm
+from dataset import testloader
+from torchvision.utils import save_image
 
 def load_model(device):
     generator = getGenerator()
     return generator
 
-def preprocess_image(image_path):
-    transform = transforms.Compose([
-        transforms.Resize((256, 256)),  # Resize to the same size used during training
-        transforms.ToTensor(),          # Convert image to tensor
-        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))  # Normalize to [-1, 1]
-    ])
-    input_image = Image.open(image_path).convert('RGB')
-    input_tensor = transform(input_image).unsqueeze(0)  # Add batch dimension
-    return input_tensor
+def preprocess_image(loader,device):
+    x, y = next(iter(loader))
+    x = x.to(device)
+    y = y.to(device)
+    
+    return x,y
 
-def generate_image(generator, input_tensor, device):
+def generate_image(generator, x, device):
     with torch.no_grad():
-        input_tensor = input_tensor.to(device)
-        output_tensor = generator(input_tensor)
+        x = x.to(device)
+        output_tensor = generator(x)
     return output_tensor
-
-def save_image(output_tensor, output_path):
-    output_tensor = output_tensor.squeeze(0)  # Remove batch dimension
-    output_tensor = (output_tensor * 0.5) + 0.5  # Denormalize to [0, 1]
-    output_image = transforms.ToPILImage()(output_tensor)
-    output_image.save(output_path)
-    return output_image
 
 def main():
     parser = argparse.ArgumentParser(description='Generate an output image from an input image using a pre-trained Pix2Pix model.')
@@ -47,15 +33,16 @@ def main():
     args = parser.parse_args()
     
     # dataset
-    loader = trainloader()
+    loader = testloader()
     # generator
     gen,_,_ = load_model(args.device)
 
-    input_tensor = preprocess_image(args.input_image_path)
-    output_tensor = generate_image(gen, input_tensor, args.device)
-    output_image = save_image(output_tensor, args.output_image_path)
+    x,y = preprocess_image(loader,args.device)
+    output = generate_image(gen, x, args.device)
+    output = torch.cat([x*.5+.5, output*.5+.5, y*.5+.5], 0)
+    save_image(output, "/content/fake_output.png")
 
-    plt.imshow(output_image)
+    plt.imshow(output)
     plt.axis('off')
     plt.show()
 

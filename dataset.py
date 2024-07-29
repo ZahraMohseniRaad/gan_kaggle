@@ -28,6 +28,11 @@ def trainloader():
     loader = DataLoader(dataset, batch_size=config.BATCH_SIZE, shuffle=True, num_workers=config.num_workers)
     return loader
 
+def testloader():
+    dataset = mydataset(config.Test_DIR)
+    loader = DataLoader(dataset, batch_size=config.BATCH_SIZE, shuffle=True, num_workers=config.num_workers)
+    return loader
+
 
 # if __name__ == "__main__":
 #     dataset = mydataset(config.Train_DIR)

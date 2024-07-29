@@ -84,8 +84,6 @@ def getGenerator():
 
     return gen, opt, scr
 
-
-
 if __name__ == "__main__":
     x = torch.randn((8, 3, 256, 256))
     gen = Generator(in_channel=3)

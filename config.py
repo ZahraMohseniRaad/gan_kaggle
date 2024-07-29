@@ -8,7 +8,7 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 Train_DIR = "/content/cityscapes/cityscapes/train"
 Test_DIR = "/content/cityscapes/cityscapes/val"
 #-------------------------------------------------------------
-BATCH_SIZE = 1
+BATCH_SIZE = 8
 IMAGE_SIZE = 256
 mean = [.5, .5, .5]
 std = [.5, .5, .5]
