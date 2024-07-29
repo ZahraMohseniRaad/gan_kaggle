@@ -15,29 +15,21 @@ def load_model(model_path, device):
     generator = getGenerator()
     return generator
 
-
 def preprocess_image(image_path):
     transform = transforms.Compose([
         transforms.Resize((256, 256)),  # Resize to the same size used during training
         transforms.ToTensor(),          # Convert image to tensor
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))  # Normalize to [-1, 1]
     ])
-    
-    # Load the input image
     input_image = Image.open(image_path).convert('RGB')
-    
-    # Crop the image from the leftmost edge to pixel 255
-    width, height = input_image.size
-    cropped_image = input_image.crop((0, 0, min(256, width), height))
-    
-    # Apply the transformations
-    input_tensor = transform(cropped_image).unsqueeze(0)  # Add batch dimension
+    input_tensor = transform(input_image).unsqueeze(0)  # Add batch dimension
     return input_tensor
 
 def generate_image(generator, input_tensor, device):
     with torch.no_grad():
         input_tensor = input_tensor.to(device)
         output_tensor = generator(input_tensor).cpu()
+        output_tensor = output_tensor*.5 + .5
     return output_tensor
 
 def save_image(output_tensor, output_path):
