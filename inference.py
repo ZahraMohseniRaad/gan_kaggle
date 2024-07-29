@@ -11,12 +11,6 @@ def load_model(device):
     generator = getGenerator()
     return generator
 
-def preprocess_image(loader,device):
-    x, y = next(iter(loader))
-    x = x.to(device)
-    y = y.to(device)
-    
-    return x,y
 
 def generate_image(generator, x, device):
     with torch.no_grad():
@@ -37,7 +31,9 @@ def main():
     # generator
     gen,_,_ = load_model(args.device)
 
-    x,y = preprocess_image(loader,args.device)
+    x, y = next(iter(loader))
+    x = x.to(args.device)
+    y = y.to(args.device)
     output = generate_image(gen, x, args.device)
     final_output = torch.cat([x*.5+.5, output*.5+.5, y*.5+.5], 0)
     save_image(final_output, "/content/fake_output.png")
