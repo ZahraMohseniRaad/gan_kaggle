@@ -5,8 +5,8 @@ from torchvision.utils import save_image
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-Train_DIR = "/kaggle/working/cityscapes/cityscapes/train"
-Test_DIR = "/kaggle/working/cityscapes/cityscapes/val"
+Train_DIR = "/content/cityscapes/cityscapes/train"
+Test_DIR = "/content/cityscapes/cityscapes/val"
 #-------------------------------------------------------------
 BATCH_SIZE = 8
 IMAGE_SIZE = 256
