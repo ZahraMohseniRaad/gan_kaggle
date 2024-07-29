@@ -11,7 +11,7 @@ import torch.nn as nn
 import config
 from tqdm import tqdm
 
-def load_model(model_path, device):
+def load_model(device):
     generator = getGenerator()
     return generator
 
@@ -29,7 +29,6 @@ def generate_image(generator, input_tensor, device):
     with torch.no_grad():
         input_tensor = input_tensor.to(device)
         output_tensor = generator(input_tensor).cpu()
-        output_tensor = output_tensor*.5 + .5
     return output_tensor
 
 def save_image(output_tensor, output_path):
@@ -50,7 +49,7 @@ def main():
     # dataset
     loader = trainloader()
     # generator
-    gen, opt_gen, scr_gen = getGenerator()
+    gen = load_model(args.device)
 
     input_tensor = preprocess_image(args.input_image_path)
     output_tensor = generate_image(gen, input_tensor, args.device)
