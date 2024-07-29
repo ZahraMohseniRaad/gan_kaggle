@@ -78,6 +78,7 @@ def getGenerator():
     try:
         if config.LOAD_MODEL:
             config.load_checkpoint(config.GEN_PATH, gen, opt, config.LEARNING_RATE)
+            print('Model has been loaded successfully.')
     except:
         pass
 
