@@ -28,7 +28,7 @@ def preprocess_image(image_path):
 def generate_image(generator, input_tensor, device):
     with torch.no_grad():
         input_tensor = input_tensor.to(device)
-        output_tensor = generator(input_tensor).cpu()
+        output_tensor = generator(input_tensor)
     return output_tensor
 
 def save_image(output_tensor, output_path):
