@@ -49,7 +49,7 @@ def main():
     # dataset
     loader = trainloader()
     # generator
-    gen = load_model(args.device)
+    gen,_,_ = load_model(args.device)
 
     input_tensor = preprocess_image(args.input_image_path)
     output_tensor = generate_image(gen, input_tensor, args.device)
