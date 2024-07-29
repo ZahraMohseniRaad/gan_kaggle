@@ -39,10 +39,10 @@ def main():
 
     x,y = preprocess_image(loader,args.device)
     output = generate_image(gen, x, args.device)
-    output = torch.cat([x*.5+.5, output*.5+.5, y*.5+.5], 0)
-    save_image(output, "/content/fake_output.png")
+    final_output = torch.cat([x*.5+.5, output*.5+.5, y*.5+.5], 0)
+    save_image(final_output, "/content/fake_output.png")
 
-    plt.imshow(output)
+    plt.imshow(final_output)
     plt.axis('off')
     plt.show()
 
