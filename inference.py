@@ -4,12 +4,10 @@ from torchvision import transforms
 from PIL import Image
 import matplotlib.pyplot as plt
 from generator import Generator  # Import the Generator class from generator.py
+from generator import getGenerator
 
 def load_model(model_path, device):
-    generator = Generator()
-    checkpoint = torch.load(model_path, map_location=device)
-    generator.load_state_dict(checkpoint['state_dict'])
-    generator.eval()
+    generator = getGenerator()
     return generator
 
 def preprocess_image(image_path):
