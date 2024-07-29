@@ -5,6 +5,11 @@ from PIL import Image
 import matplotlib.pyplot as plt
 from generator import Generator  # Import the Generator class from generator.py
 from generator import getGenerator
+from dataset import trainloader
+from discriminator import getDiscriminator
+import torch.nn as nn
+import config
+from tqdm import tqdm
 
 def load_model(model_path, device):
     generator = getGenerator()
@@ -37,14 +42,17 @@ def main():
     parser = argparse.ArgumentParser(description='Generate an output image from an input image using a pre-trained Pix2Pix model.')
     parser.add_argument('input_image_path', type=str, help='Path to the input image')
     parser.add_argument('output_image_path', type=str, help='Path to save the output image')
-    parser.add_argument('--model_path', type=str, default='gen.pth.tar', help='Path to the pre-trained model (default: gen.pth.tar)')
     parser.add_argument('--device', type=str, default='cpu', help='Device to run the model on (default: cpu)')
 
     args = parser.parse_args()
+    
+    # dataset
+    loader = trainloader()
+    # generator
+    gen, opt_gen, scr_gen = getGenerator()
 
-    generator = load_model(args.model_path, args.device)
     input_tensor = preprocess_image(args.input_image_path)
-    output_tensor = generate_image(generator, input_tensor, args.device)
+    output_tensor = generate_image(gen, input_tensor, args.device)
     output_image = save_image(output_tensor, args.output_image_path)
 
     plt.imshow(output_image)
